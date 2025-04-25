@@ -79,7 +79,7 @@ app.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
 // not found route handle
 // যদি user not existing route এ hit করে তাহলে সে  একটি error message পাবে
-// এই route error function সব router এর নিচে রাখতে হবে।
+// এই route error function সব router এর নিচে রাখতে হবে। এবং global error এর উপরে রাখতে হবে।
 // app.all("*", (req: Request, res: Response, next: NextFunction) => {
 //   res.status(400).json({
 //     success: false,
