@@ -1,17 +1,41 @@
 import express, { NextFunction, Request, Response } from "express";
 
 const app = express();
+const userRouter = express.Router();
+const courseRouter = express.Router();
 
 //parser middleware
 app.use(express.json()); //json file parse করার জন্য ব্যবহার করা হয়।
 app.use(express.text()); //plain text parse করার জন্য ব্যবহার করা হয়।
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/courses", courseRouter);
 
 //CUSTOM MIDDLEWARE
-
 const logger = (req: Request, res: Response, next: NextFunction) => {
   req.body = "Shahin";
   next();
 };
+
+//use router
+userRouter.post("/create-user", (req: Request, res: Response) => {
+  const user = req.body;
+  res.json({
+    success: true,
+    message: "User created Successfully",
+    user,
+  });
+});
+
+//user router
+courseRouter.post("/create-course", (req: Request, res: Response) => {
+  const course = req.body;
+
+  res.status(200).json({
+    success: true,
+    message: "Course create successfully",
+    course,
+  });
+});
 
 //get params value
 app.get("/users/:userId/:storeId", (req: Request, res: Response) => {
