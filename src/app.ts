@@ -61,6 +61,44 @@ app.post("/another", logger, (req: Request, res: Response) => {
   });
 });
 
+// routing with error handler
+app.get("/", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.json({
+      name: "Shahin",
+    });
+    // res.send(something);
+  } catch (error) {
+    next(error);
+    // res.status(400).json({
+    //   success: false,
+    //   message: "Something Went Wrong",
+    // });
+  }
+});
+
+// not found route handle
+// যদি user not existing route এ hit করে তাহলে সে  একটি error message পাবে
+// এই route error function সব router এর নিচে রাখতে হবে।
+// app.all("*", (req: Request, res: Response, next: NextFunction) => {
+//   res.status(400).json({
+//     success: false,
+//   });
+// });
+
+//global error handler
+// সকল router এর error কে এই global handler দিয়ে handle করা যাবে।
+// শুধু router এর মধ্যে থেকে catch এর মধ্যে error ধরলে সেই error next(error) এর মধ্যে error কে call করে দিতে হবে।
+
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+  if (error) {
+    res.status(400).json({
+      success: false,
+      message: "Something went Wrong",
+    });
+  }
+});
+
 export default app;
 
 /**

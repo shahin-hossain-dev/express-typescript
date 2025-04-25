@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -54,6 +63,41 @@ app.post("/another", logger, (req, res) => {
     res.json({
         message: "Successfully received data",
     });
+});
+// routing with error handler
+app.get("/", (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.json({
+            name: "Shahin",
+        });
+        // res.send(something);
+    }
+    catch (error) {
+        next(error);
+        // res.status(400).json({
+        //   success: false,
+        //   message: "Something Went Wrong",
+        // });
+    }
+}));
+// not found route handle
+// যদি user not existing route এ hit করে তাহলে সে  একটি error message পাবে
+// এই route error function সব router এর নিচে রাখতে হবে।
+// app.all("*", (req: Request, res: Response, next: NextFunction) => {
+//   res.status(400).json({
+//     success: false,
+//   });
+// });
+//global error handler
+// সকল router এর error কে এই global handler দিয়ে handle করা যাবে।
+// শুধু router এর মধ্যে থেকে catch এর মধ্যে error ধরলে সেই error next(error) এর মধ্যে error কে call করে দিতে হবে।
+app.use((error, req, res, next) => {
+    if (error) {
+        res.status(400).json({
+            success: false,
+            message: "Something went Wrong",
+        });
+    }
 });
 exports.default = app;
 /**
